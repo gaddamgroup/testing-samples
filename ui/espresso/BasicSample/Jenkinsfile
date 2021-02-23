@@ -24,8 +24,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    setBuildCommandsBasedOnReleaseType()
                     dir('ui/espresso/BasicSample') {
-                        setBuildCommandsBasedOnReleaseType()
                         echo "${env.ANDROID_BUILD_COMMAND}"
                         sh "${env.ANDROID_BUILD_COMMAND}"
                     }
