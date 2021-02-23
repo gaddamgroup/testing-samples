@@ -29,6 +29,7 @@ pipeline {
             steps {
                 script {
                     setBuildCommandsBasedOnReleaseType()
+                    sh 'mkdir -p /.android/'
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_BUILD_COMMAND}"
                     }
