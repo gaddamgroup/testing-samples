@@ -28,39 +28,49 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh '$ANDROID_BUILD_COMMAND'
+                    dir('ui/espresso/BasicSample') {
+                        sh '$ANDROID_BUILD_COMMAND'
+                    }
                 }
             }
         }
         stage('UnitTest') {
             steps {
                 script {
-                    sh '$ANDROID_UNIT_TEST_COMMAND'
+                    dir('ui/espresso/BasicSample') {
+                        sh '$ANDROID_UNIT_TEST_COMMAND'
+                    }
                 }
             }
         }
         stage('LintAnalyser') {
             steps {
                 script {
-                    sh '$ANDROID_LINT_COMMAND'
+                    dir('ui/espresso/BasicSample') {
+                        sh '$ANDROID_LINT_COMMAND'
+                    }
                 }
             }
         }
         stage('UITests') {
             steps {
                 script {
-                    sh '$ANDROID_UI_TEST_COMMAND'
+                    dir('ui/espresso/BasicSample') {
+                        sh '$ANDROID_UI_TEST_COMMAND'
+                    }
                 }
             }
         }
         stage('GithubRelease') {
             steps {
                 script {
-                    sh '$ANDROID_PACKGER_COMMAND'
-                    if (isReleaseBuild()) {
-                        sh 'bundle install && bundle exec fastlane githubRelease'
-                    } else {
-                        echo "[Info] Skipping APK release to GITHUB"
+                    dir('ui/espresso/BasicSample') {
+                        sh '$ANDROID_PACKGER_COMMAND'
+                        if (isReleaseBuild()) {
+                            sh 'bundle install && bundle exec fastlane githubRelease'
+                        } else {
+                            echo "[Info] Skipping APK release to GITHUB"
+                        }
                     }
                 }
             }
