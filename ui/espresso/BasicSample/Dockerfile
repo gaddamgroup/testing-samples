@@ -1,12 +1,24 @@
-FROM openjdk:8
+#FROM openjdk:11.0.10-jdk
+FROM adoptopenjdk:11.0.10_9-jdk-openj9-0.24.0
 
 LABEL Vijay <gvreddy579@gmail.com>
 
-ENV ANDROID_SDK_URL https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip
+ENV ANDROID_SDK_URL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
 ENV ANDROID_HOME /usr/local/android-sdk-linux
-ENV PATH $PATH=$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools:$PATH
+ENV PATH $PATH=$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools:$PATH
 
-USER root
+RUN apt-get update && \
+    apt-get install  --no-install-recommends -y --allow-unauthenticated \
+    build-essential \
+    git \
+    qt5-default \
+    ruby-full \
+    unzip \
+    wget && \
+    # Clean up
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    apt-get autoremove -y && \
+    apt-get clean
 
 RUN mkdir "$ANDROID_HOME" .android && \
     cd "$ANDROID_HOME" && \
@@ -14,26 +26,17 @@ RUN mkdir "$ANDROID_HOME" .android && \
     unzip sdk.zip && \
     rm sdk.zip && \
     # Download Android SDK
-    yes | sdkmanager --licenses && \
-    sdkmanager --update && \
-    sdkmanager "build-tools;29.0.3" && \
-    sdkmanager "platforms;android-29" && \
-    sdkmanager "platform-tools" && \
-    sdkmanager "extras;android;m2repository" && \
-    sdkmanager "extras;google;m2repository" && \
+    yes | sdkmanager --licenses --sdk_root=$ANDROID_HOME && \
+    sdkmanager --update  --sdk_root=$ANDROID_HOME && \
+    sdkmanager "build-tools;30.0.3"  --sdk_root=$ANDROID_HOME && \
+    sdkmanager "platforms;android-30"  --sdk_root=$ANDROID_HOME && \
+    sdkmanager "platform-tools"  --sdk_root=$ANDROID_HOME && \
+    sdkmanager "extras;android;m2repository"  --sdk_root=$ANDROID_HOME && \
+    sdkmanager "extras;google;m2repository"  --sdk_root=$ANDROID_HOME && \
+    chmod 777 /usr/local/android-sdk-linux && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get autoremove -y && \
     apt-get clean
-
-# Install Fastlane
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y --allow-unauthenticated build-essential git ruby-full && \
-    # Clean up
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    apt-get autoremove -y && \
-    apt-get clean
-
-RUN chmod 777 /usr/local/android-sdk-linux
 
 # Install Fastlane
 RUN gem install rake && \
@@ -43,3 +46,4 @@ RUN gem install rake && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get autoremove -y && \
     apt-get clean
+

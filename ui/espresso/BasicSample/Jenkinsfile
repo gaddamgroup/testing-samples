@@ -27,7 +27,7 @@ pipeline {
                     dir('ui/espresso/BasicSample') {
                         setBuildCommandsBasedOnReleaseType()
                         echo "${env.ANDROID_BUILD_COMMAND}"
-                        sh './gradlew clean assembleRelease'
+                        sh "${env.ANDROID_BUILD_COMMAND}"
                     }
                 }
             }
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 script {
                     dir('ui/espresso/BasicSample') {
-                        sh '$ANDROID_UNIT_TEST_COMMAND'
+                        sh "${env.ANDROID_UNIT_TEST_COMMAND}"
                     }
                 }
             }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     dir('ui/espresso/BasicSample') {
-                        sh '$ANDROID_LINT_COMMAND'
+                        sh "${env.ANDROID_LINT_COMMAND}"
                     }
                 }
             }
@@ -54,7 +54,7 @@ pipeline {
             steps {
                 script {
                     dir('ui/espresso/BasicSample') {
-                        sh '$ANDROID_UI_TEST_COMMAND'
+                        sh "${env.ANDROID_UI_TEST_COMMAND}"
                     }
                 }
             }
@@ -63,7 +63,7 @@ pipeline {
             steps {
                 script {
                     dir('ui/espresso/BasicSample') {
-                        sh '$ANDROID_PACKGER_COMMAND'
+                        sh "${env.ANDROID_PACKGER_COMMAND}"
                         if (isReleaseBuild()) {
                             sh 'bundle install && bundle exec fastlane githubRelease'
                         } else {
