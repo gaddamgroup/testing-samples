@@ -4,10 +4,6 @@ pipeline {
             image 'android-image:latest'
         }
     }
-    environment {
-        LC_ALL="en_US.UTF-8"
-        LANG="en_US.UTF-8"
-    }
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '7', daysToKeepStr: '7', numToKeepStr: '7')
         timestamps()
@@ -30,7 +26,7 @@ pipeline {
                 script {
                     dir('ui/espresso/BasicSample') {
                         setBuildCommandsBasedOnReleaseType()
-                        echo '$ANDROID_BUILD_COMMAND'
+                        echo "${env.ANDROID_BUILD_COMMAND}"
                         sh './gradlew clean assembleRelease'
                     }
                 }
@@ -102,6 +98,7 @@ pipeline {
  * Setting the build commands based on the type of the release
  */
 def setBuildCommandsBasedOnReleaseType() {
+    echo "Is is release build: ${isReleaseBuild()}"
     if (isReleaseBuild()) {
         env.ANDROID_BUILD_COMMAND = './gradlew clean assembleRelease'
         env.ANDROID_UNIT_TEST_COMMAND = './gradlew assembleReleaseUnitTest testReleaseUnitTest'
