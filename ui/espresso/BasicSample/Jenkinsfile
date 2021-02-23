@@ -28,7 +28,7 @@ pipeline {
                     setBuildCommandsBasedOnReleaseType()
                     dir('ui/espresso/BasicSample') {
                         echo "${env.ANDROID_BUILD_COMMAND}"
-                        sh 'gradle --version && java --version'
+                        //sh 'gradle --version && java --version'
                         sh "gradle clean assembleRelease"
                     }
                 }
