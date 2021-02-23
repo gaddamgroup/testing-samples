@@ -29,10 +29,6 @@ pipeline {
             steps {
                 script {
                     setBuildCommandsBasedOnReleaseType()
-                    sh 'echo $GRADLE_USER_HOME'
-                    sh 'pwd'
-                    sh 'java --version'
-                    sh 'gradle --version'
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_BUILD_COMMAND}"
                     }
@@ -107,18 +103,18 @@ pipeline {
 def setBuildCommandsBasedOnReleaseType() {
     echo "Is is release build: ${isReleaseBuild()}"
     if (isReleaseBuild()) {
-        env.ANDROID_BUILD_COMMAND = './gradlew clean assembleRelease'
-        env.ANDROID_UNIT_TEST_COMMAND = './gradlew assembleReleaseUnitTest testReleaseUnitTest'
-        env.ANDROID_LINT_COMMAND = './gradlew lintRelease'
-        env.ANDROID_UI_TEST_COMMAND = './gradlew deviceCheck deviceAndroidTest'
-        env.ANDROID_PACKGER_COMMAND = './gradlew zipApksForRelease'
+        env.ANDROID_BUILD_COMMAND = 'gradle clean assembleRelease'
+        env.ANDROID_UNIT_TEST_COMMAND = 'gradle assembleReleaseUnitTest testReleaseUnitTest'
+        env.ANDROID_LINT_COMMAND = 'gradle lintRelease'
+        env.ANDROID_UI_TEST_COMMAND = 'gradle deviceCheck deviceAndroidTest'
+        env.ANDROID_PACKGER_COMMAND = 'gradle zipApksForRelease'
         // Except Release Type of 'Release' everything for now is considered as Debug Build
     } else {
-        env.ANDROID_BUILD_COMMAND = './gradlew clean assembleDebug'
-        env.ANDROID_UNIT_TEST_COMMAND = './gradlew assembleDebugUnitTest testDebugUnitTest'
-        env.ANDROID_LINT_COMMAND = './gradlew lintDebug'
-        env.ANDROID_UI_TEST_COMMAND = './gradlew deviceCheck deviceAndroidTest'
-        env.ANDROID_PACKGER_COMMAND = './gradlew zipApksForDebug'
+        env.ANDROID_BUILD_COMMAND = 'gradle clean assembleDebug'
+        env.ANDROID_UNIT_TEST_COMMAND = 'gradle assembleDebugUnitTest testDebugUnitTest'
+        env.ANDROID_LINT_COMMAND = 'gradle lintDebug'
+        env.ANDROID_UI_TEST_COMMAND = 'gradle deviceCheck deviceAndroidTest'
+        env.ANDROID_PACKGER_COMMAND = 'gradle zipApksForDebug'
     }
 }
 
