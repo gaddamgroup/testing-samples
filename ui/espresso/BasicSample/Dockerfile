@@ -1,12 +1,11 @@
 #FROM openjdk:11.0.10-jdk
 FROM adoptopenjdk:11.0.10_9-jdk-openj9-0.24.0
-
-LABEL Vijay <gvreddy579@gmail.com>
+MAINTAINER Vijay <gvreddy579@gmail.com>
 
 ENV ANDROID_SDK_URL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 ENV PATH $PATH=$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools:$PATH
-USER root
+
 RUN apt-get update && \
     apt-get install  --no-install-recommends -y --allow-unauthenticated \
     build-essential \
@@ -47,3 +46,9 @@ RUN gem install rake && \
     apt-get autoremove -y && \
     apt-get clean
 
+ENV GRADLE_HOME=/opt/gradle/gradle-6.5.1
+RUN wget https://services.gradle.org/distributions/gradle-6.5.1-bin.zip && \
+    mkdir /opt/gradle && \
+    unzip -d /opt/gradle gradle-6.5.1-bin.zip && \
+    rm -f gradle-6.5.1-bin.zip
+ENV PATH $PATH=$GRADLE_HOME/bin:$PATH
