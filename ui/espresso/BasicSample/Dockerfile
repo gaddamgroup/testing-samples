@@ -54,4 +54,3 @@ RUN wget https://services.gradle.org/distributions/gradle-6.5.1-bin.zip && \
 ENV PATH=$GRADLE_HOME/bin:$PATH
 ENV GRADLE_USER_HOME=/home/jenkins
 WORKDIR /home/jenkins
-USER jenkins

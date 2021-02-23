@@ -26,12 +26,12 @@ pipeline {
             steps {
                 script {
                     setBuildCommandsBasedOnReleaseType()
+                    sh 'echo $GRADLE_USER_HOME'
+                    sh 'pwd'
+                    sh 'java --version'
+                    sh 'gradle --version'
                     dir('ui/espresso/BasicSample') {
-                        echo "${env.ANDROID_BUILD_COMMAND}"
-                        sh 'echo $GRADLE_USER_HOME'
-                        sh 'whoami'
-                        sh 'gradle --version && java --version'
-                        sh "gradle clean assembleRelease"
+                        sh "${env.ANDROID_BUILD_COMMAND}"
                     }
                 }
             }
