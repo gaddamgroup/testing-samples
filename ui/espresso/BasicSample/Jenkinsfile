@@ -29,6 +29,7 @@ pipeline {
             steps {
                 script {
                     dir('ui/espresso/BasicSample') {
+                        echo '$ANDROID_BUILD_COMMAND'
                         sh '$ANDROID_BUILD_COMMAND'
                     }
                 }
