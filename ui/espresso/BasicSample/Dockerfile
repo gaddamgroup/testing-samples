@@ -6,6 +6,8 @@ ENV ANDROID_SDK_URL https://dl.google.com/android/repository/commandlinetools-li
 ENV ANDROID_HOME /usr/local/android-sdk-linux
 ENV PATH $PATH=$ANDROID_HOME/cmdline-tools:$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools:$PATH
 
+USER root
+
 RUN apt-get update && \
     apt-get install  --no-install-recommends -y --allow-unauthenticated \
     build-essential \
