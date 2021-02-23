@@ -29,8 +29,9 @@ pipeline {
             steps {
                 script {
                     dir('ui/espresso/BasicSample') {
+                        setBuildCommandsBasedOnReleaseType()
                         echo '$ANDROID_BUILD_COMMAND'
-                        sh '$ANDROID_BUILD_COMMAND'
+                        sh './gradlew clean assembleRelease'
                     }
                 }
             }
