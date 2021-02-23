@@ -33,6 +33,8 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean
 
+RUN chmod 777 /usr/local/android-sdk-linux
+
 # Install Fastlane
 RUN gem install rake && \
     gem install fastlane -NV && \
