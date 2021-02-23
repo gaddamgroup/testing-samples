@@ -15,6 +15,9 @@ pipeline {
     parameters {
         choice choices: ['Debug', 'Release'], description: 'Choose the type of release', name: 'RELEASE_TYPE'
     }
+    environment {
+        GRADLE_USER_HOME="${env.WORKSPACE}"
+    }
     stages {
         stage('SCM-Checkout') {
             steps {
