@@ -10,7 +10,7 @@ pipeline {
     }
     options {
         buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '7', daysToKeepStr: '7', numToKeepStr: '7')
-        timestamps
+        timestamps()
         timeout(time: 2, unit: 'HOURS')
         // Stop the build early in case of compile or test failures
         skipStagesAfterUnstable()
