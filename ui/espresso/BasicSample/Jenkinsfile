@@ -28,8 +28,8 @@ pipeline {
                     setBuildCommandsBasedOnReleaseType()
                     dir('ui/espresso/BasicSample') {
                         echo "${env.ANDROID_BUILD_COMMAND}"
-                        sh 'whoami'
                         sh 'echo $GRADLE_USER_HOME'
+                        sh 'whoami'
                         sh 'gradle --version && java --version'
                         sh "gradle clean assembleRelease"
                     }
