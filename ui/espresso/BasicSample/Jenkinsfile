@@ -1,0 +1,114 @@
+pipeline {
+    agent {
+        docker {
+            image 'android-image:latest'
+        }
+    }
+    environment {
+        LC_ALL="en_US.UTF-8"
+        LANG="en_US.UTF-8"
+    }
+    options {
+        buildDiscarder logRotator(artifactDaysToKeepStr: '7', artifactNumToKeepStr: '7', daysToKeepStr: '7', numToKeepStr: '7')
+        timestamps
+        timeout(time: 2, unit: 'HOURS')
+        // Stop the build early in case of compile or test failures
+        skipStagesAfterUnstable()
+        parallelsAlwaysFailFast()
+    }
+    parameters {
+        choice choices: ['Debug', 'Release'], description: 'Choose the type of release', name: 'RELEASE_TYPE'
+    }
+    stages {
+        stage('SCM-Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                script {
+                    sh '$ANDROID_BUILD_COMMAND'
+                }
+            }
+        }
+        stage('UnitTest') {
+            steps {
+                script {
+                    sh '$ANDROID_UNIT_TEST_COMMAND'
+                }
+            }
+        }
+        stage('LintAnalyser') {
+            steps {
+                script {
+                    sh '$ANDROID_LINT_COMMAND'
+                }
+            }
+        }
+        stage('UITests') {
+            steps {
+                script {
+                    sh '$ANDROID_UI_TEST_COMMAND'
+                }
+            }
+        }
+        stage('GithubRelease') {
+            steps {
+                script {
+                    sh '$ANDROID_PACKGER_COMMAND'
+                    if (isReleaseBuild()) {
+                        sh 'bundle install && bundle exec fastlane githubRelease'
+                    } else {
+                        echo "[Info] Skipping APK release to GITHUB"
+                    }
+                }
+            }
+        }
+        post {
+            success {
+                script {
+                    // Archive the APKs so that they can be downloaded from Jenkins
+                    echo 'Archiving APKs...'
+                    archiveArtifacts '**/*.zip'
+                }
+            }
+        }
+    }
+    post {
+        failure {
+            script {
+                // Notify developers in relevant possible ways
+                // 1. Email, 2. Slack/Teams/WebEx
+                echo 'Job failed, sending notification to developers....'
+            }
+        }
+    }
+}
+
+/**
+ * Setting the build commands based on the type of the release
+ */
+def setBuildCommandsBasedOnReleaseType() {
+    if (isReleaseBuild()) {
+        env.ANDROID_BUILD_COMMAND = './gradlew clean assembleRelease'
+        env.ANDROID_UNIT_TEST_COMMAND = './gradlew assembleReleaseUnitTest testReleaseUnitTest'
+        env.ANDROID_LINT_COMMAND = './gradlew lintRelease'
+        env.ANDROID_UI_TEST_COMMAND = './gradlew deviceCheck deviceAndroidTest'
+        env.ANDROID_PACKGER_COMMAND = './gradlew zipApksForRelease'
+        // Except Release Type of 'Release' everything for now is considered as Debug Build
+    } else {
+        env.ANDROID_BUILD_COMMAND = './gradlew clean assembleDebug'
+        env.ANDROID_UNIT_TEST_COMMAND = './gradlew assembleDebugUnitTest testDebugUnitTest'
+        env.ANDROID_LINT_COMMAND = './gradlew lintDebug'
+        env.ANDROID_UI_TEST_COMMAND = './gradlew deviceCheck deviceAndroidTest'
+        env.ANDROID_PACKGER_COMMAND = './gradlew zipApksForDebug'
+    }
+}
+
+/**
+ * Checking if the current build is a release build or not
+ */
+def isReleaseBuild() {
+    return "${params.RELEASE_TYPE}".equalsIgnoreCase("Release")
+}
