@@ -51,4 +51,4 @@ RUN wget https://services.gradle.org/distributions/gradle-6.5.1-bin.zip && \
     mkdir /opt/gradle && \
     unzip -d /opt/gradle gradle-6.5.1-bin.zip && \
     rm -f gradle-6.5.1-bin.zip
-ENV PATH $PATH=$GRADLE_HOME/bin:$PATH
+ENV PATH=$GRADLE_HOME/bin:$PATH
