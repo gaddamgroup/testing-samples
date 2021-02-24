@@ -40,9 +40,13 @@ pipeline {
                 script {
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_UNIT_TEST_COMMAND}"
+                        // Publish Test Reports
+                        publishHTML([allowMissing: true,
+                                     alwaysLinkToLastBuild: true,
+                                     includes: '**/*.html', keepAll: false,
+                                     reportDir: 'app/build/reports/', reportFiles: 'index.html', reportName: 'UNIT TEST HTML Report'])
                     }
-                    // Publish Test Reports
-                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: false, reportDir: '', reportFiles: 'index.html', reportName: 'HTML Report'])
+
                 }
             }
         }
