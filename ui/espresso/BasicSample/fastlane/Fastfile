@@ -7,7 +7,7 @@ lane :githubRelease do
     tag_name: "v0.0.1",
     description: "No changelog provided",
     commitish: "main",
-    upload_assets: ["ui/espresso/BasicSample/app/build/outputs/apk-zips/apks.zip"]
+    upload_assets: ["app/build/outputs/apk-zips/apks.zip"]
   )
 end
 
