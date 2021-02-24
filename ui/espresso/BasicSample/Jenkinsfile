@@ -86,7 +86,7 @@ pipeline {
                         def commit_sha = "main"
                         def upload_assets = "app/build/outputs/apk-zips/debug/apks.zip"
                         withCredentials([usernamePassword(credentialsId: 'gihutb_api_toekn', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
-                            sh "bundle install && bundle exec fastlane githubRelease release_name:${release_name} tag_name:${tag_name} release_description:${release_description} commit_sha:${commit_sha} upload_assets:${upload_assets}"
+                            sh "bundle install && bundle exec fastlane githubRelease release_name:${release_name} tag_name:${tag_name} release_description:'${release_description}' commit_sha:${commit_sha} upload_assets:${upload_assets}"
                         }
                         if (isReleaseBuild()) {
                             sh 'bundle install && bundle exec fastlane action set_github_release'
