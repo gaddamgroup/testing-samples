@@ -40,12 +40,12 @@ pipeline {
                 script {
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_UNIT_TEST_COMMAND}"
-                        junit allowEmptyResults: true, testResults: 'ui/espresso/BasicSample/app/build/test-results/testDebugUnitTest/*.xml'
+                        junit allowEmptyResults: true, testResults: 'app/build/test-results/**/*.xml'
                         // Publish Test Reports
                         publishHTML([allowMissing: true,
                                      alwaysLinkToLastBuild: true,
-                                     includes: '**/*.html', keepAll: false,
-                                     reportDir: 'app/build/reports/tests', reportFiles: 'index.html', reportName: 'UNIT TEST HTML Report'])
+                                     includes: '**/*.*', keepAll: false,
+                                     reportDir: 'app/build/reports/tests/testDebugUnitTest', reportFiles: 'index.html', reportName: 'UNIT TEST HTML Report'])
                     }
 
                 }
@@ -56,6 +56,11 @@ pipeline {
                 script {
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_LINT_COMMAND}"
+                        // Publish Test Reports
+                        publishHTML([allowMissing: true,
+                                     alwaysLinkToLastBuild: true,
+                                     includes: '*.html', keepAll: false,
+                                     reportDir: 'app/build/reports/', reportFiles: 'lint-results-debug.html', reportName: 'LINT HTML Report'])
                     }
                 }
             }
