@@ -56,4 +56,6 @@ ENV PATH=$GRADLE_HOME/bin:$PATH
 RUN gradle --version && \
     mkdir -p /.android && chmod 777 /.android && \
     touch /.robolectric-download-lock && chmod 777 /.robolectric-download-lock && \
-    mkdir -p /.m2 && chmod 777 /.m2
+    mkdir -p /.m2 && chmod 777 /.m2 && \
+    chmod 777 / && \
+    chmod 777 /tmp
