@@ -53,14 +53,6 @@ pipeline {
                         sh "${env.ANDROID_LINT_COMMAND}"
                     }
                 }
-            } post {
-                success {
-                    script {
-                        // Archive the APKs so that they can be downloaded from Jenkins
-                        echo 'Archiving APKs...'
-                        archiveArtifacts '**/*.zip'
-                    }
-                }
             }
         }
         stage('UITests') {
