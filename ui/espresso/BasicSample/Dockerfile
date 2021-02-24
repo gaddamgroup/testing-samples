@@ -1,4 +1,3 @@
-#FROM openjdk:11.0.10-jdk
 FROM adoptopenjdk:11.0.10_9-jdk-openj9-0.24.0
 MAINTAINER Vijay <gvreddy579@gmail.com>
 
