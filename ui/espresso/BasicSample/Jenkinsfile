@@ -16,7 +16,7 @@ pipeline {
         choice choices: ['Debug', 'Release'], description: 'Choose the type of release', name: 'RELEASE_TYPE'
     }
     environment {
-        GRADLE_USER_HOME="${env.WORKSPACE}"
+        GRADLE_USER_HOME = "${env.WORKSPACE}"
     }
     stages {
         stage('SCM-Checkout') {
@@ -42,6 +42,12 @@ pipeline {
                         sh "${env.ANDROID_UNIT_TEST_COMMAND}"
                     }
                 }
+            } post {
+                success {
+                    script {
+                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: false, reportDir: '', reportFiles: 'index.html', reportName: 'HTML Report'])
+                    }
+                }
             }
         }
         stage('LintAnalyser') {
@@ -49,6 +55,14 @@ pipeline {
                 script {
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_LINT_COMMAND}"
+                    }
+                }
+            } post {
+                success {
+                    script {
+                        // Archive the APKs so that they can be downloaded from Jenkins
+                        echo 'Archiving APKs...'
+                        archiveArtifacts '**/*.zip'
                     }
                 }
             }
