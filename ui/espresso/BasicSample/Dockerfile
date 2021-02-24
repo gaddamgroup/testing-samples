@@ -57,9 +57,8 @@ RUN gradle --version && \
     mkdir -p /.android && chmod 777 /.android && \
     touch /.robolectric-download-lock && chmod 777 /.robolectric-download-lock && \
     mkdir -p /.m2 && chmod 777 /.m2 && \
-    chmod 777 /tmp
-
-RUN fastlane --version
+    chmod 777 /tmp && \
+    mkdir -p /.fastlane && chmod 777 /.fastlane
 
 RUN useradd -u 501 -s /bin/bash jenkins
 WORKDIR /home/jenkins
