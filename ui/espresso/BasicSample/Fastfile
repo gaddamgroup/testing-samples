@@ -1,0 +1,13 @@
+lane :githubRelease do
+  # Calling buil artifact as GITHUB Release
+  set_github_release(
+    repository_name: "gaddamgroup/testing-samples",
+    api_token: ENV["GITHUB_TOKEN"],
+    name: "BetaRelease",
+    tag_name: "v0.0.1",
+    description: "No changelog provided",
+    commitish: "main",
+    upload_assets: ["ui/espresso/BasicSample/app/build/outputs/apk-zips/apks.zip"]
+  )
+end
+
