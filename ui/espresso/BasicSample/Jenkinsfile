@@ -46,7 +46,7 @@ pipeline {
                         publishHTML([allowMissing         : true,
                                      alwaysLinkToLastBuild: true,
                                      includes             : '**/*.*', keepAll: false,
-                                     reportDir            : 'app/build/reports/tests/testDebugUnitTest', reportFiles: 'index.html', reportName: 'UNITTEST-HTML-Report'])
+                                     reportDir            : "${env.UNIT_TEST_REPORTS_DIR}", reportFiles: 'index.html', reportName: 'UNITTEST-HTML-Report'])
                     }
 
                 }
@@ -61,7 +61,7 @@ pipeline {
                         publishHTML([allowMissing         : true,
                                      alwaysLinkToLastBuild: true,
                                      includes             : '*.html', keepAll: false,
-                                     reportDir            : 'app/build/reports/', reportFiles: 'lint-results-debug.html', reportName: 'LINT-HTML-Report'])
+                                     reportDir            : 'app/build/reports/', reportFiles: "${env.LINT_REPORTS_NAME}", reportName: 'LINT-HTML-Report'])
                     }
                 }
             }
@@ -80,11 +80,11 @@ pipeline {
                 script {
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_PACKGER_COMMAND}"
-                        def release_name = "BetaRelease"
-                        def tag_name = "v0.0.2"
+                        def release_name = "Release-0.0.${env.BUILD_NUMBER}"
+                        def tag_name = "v0.0.${env.BUILD_NUMBER}"
                         def release_description = "Initial Release"
                         def commit_sha = "main"
-                        def upload_assets = "app/build/outputs/apk-zips/debug/apks.zip"
+                        def upload_assets = "${env.RELEASE_ASSETS_DIR}"
                         withCredentials([usernamePassword(credentialsId: 'gihutb_api_toekn', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
                             sh "bundle install && bundle exec fastlane githubRelease release_name:${release_name} tag_name:${tag_name} release_description:'${release_description}' commit_sha:${commit_sha} upload_assets:${upload_assets}"
                         }
@@ -129,6 +129,9 @@ def setBuildCommandsBasedOnReleaseType() {
         env.ANDROID_LINT_COMMAND = 'gradle lintRelease'
         env.ANDROID_UI_TEST_COMMAND = 'gradle deviceCheck deviceAndroidTest'
         env.ANDROID_PACKGER_COMMAND = 'gradle zipApksForRelease'
+        env.UNIT_TEST_REPORTS_DIR = 'app/build/reports/tests/testReleaseUnitTest'
+        env.LINT_REPORTS_NAME = 'lint-results-release.html'
+        env.RELEASE_ASSETS_DIR = 'app/build/outputs/apk-zips/release/apks.zip'
         // Except Release Type of 'Release' everything for now is considered as Debug Build
     } else {
         env.ANDROID_BUILD_COMMAND = 'gradle clean assembleDebug'
@@ -136,6 +139,9 @@ def setBuildCommandsBasedOnReleaseType() {
         env.ANDROID_LINT_COMMAND = 'gradle lintDebug'
         env.ANDROID_UI_TEST_COMMAND = 'gradle deviceCheck deviceAndroidTest'
         env.ANDROID_PACKGER_COMMAND = 'gradle zipApksForDebug'
+        env.UNIT_TEST_REPORTS_DIR = 'app/build/reports/tests/testDebugUnitTest'
+        env.LINT_REPORTS_NAME = 'lint-results-debug.html'
+        env.RELEASE_ASSETS_DIR = 'app/build/outputs/apk-zips/debug/apks.zip'
     }
 }
 
