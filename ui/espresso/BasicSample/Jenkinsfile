@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'android-image:latest'
-            args '--network host --privileged --tty --volume /Users/vijayreddy.gaddam/_temp:/:rw'
+            args '--network host --privileged --tty'
         }
     }
     options {
