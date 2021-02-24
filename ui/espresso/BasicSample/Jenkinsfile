@@ -80,7 +80,7 @@ pipeline {
                     dir('ui/espresso/BasicSample') {
                         sh "${env.ANDROID_PACKGER_COMMAND}"
                         withCredentials([usernamePassword(credentialsId: 'gihutb_api_toekn', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USER')]) {
-                            sh 'bundle install && bundle exec fastlane githubRelease'
+                            sh 'bundle exec fastlane githubRelease'
                         }
                         if (isReleaseBuild()) {
                             sh 'bundle install && bundle exec fastlane action set_github_release'
